@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Management</title>
+    <link rel="stylesheet" href="/css/agent-styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    
+        <h1>Agent Management</h1>
+        
+
+    <div class="container">
+        <form id="agentForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+
+            <label for="mobile">Mobile Number:</label>
+            <input type="number" maxlength="10" id="mobile" placeholder="+91" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+
+            <button type="submit">Add Agent</button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <h2>Agent List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Password</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="agentList"></tbody>
+        </table>
+        
+    </div>
+    <div class="button-container">
+    <button class="download-btn" onclick="downloadPDF()">Download PDF</button>
+    <button class="download-btn" onclick="downloadCSV()">Download .CSV</button>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const agentForm = document.getElementById("agentForm");
+            const agentList = document.getElementById("agentList");
+
+            let agents = JSON.parse(localStorage.getItem("agents")) || [];
+            renderAgents();
+
+            agentForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const name = document.getElementById("name").value;
+                const email = document.getElementById("email").value;
+                const mobile = document.getElementById("mobile").value;
+                const password = document.getElementById("password").value;
+
+                if (!name || !email || !mobile || !password) {
+                    alert("Please fill all fields!");
+                    return;
+                }
+
+                agents.push({ name, email, mobile, password });
+                localStorage.setItem("agents", JSON.stringify(agents));
+
+                renderAgents();
+                agentForm.reset();
+            });
+
+            function renderAgents() {
+                agentList.innerHTML = "";
+                agents.forEach((agent, index) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${agent.name}</td>
+                        <td>${agent.email}</td>
+                        <td>${agent.mobile}</td>
+                        <td>${"*".repeat(agent.password.length)}</td>
+                        <td><button onclick="deleteAgent(${index})">Delete</button></td>
+                    `;
+                    agentList.appendChild(row);
+                });
+            }
+
+            window.deleteAgent = function (index) {
+                agents.splice(index, 1);
+                localStorage.setItem("agents", JSON.stringify(agents));
+                renderAgents();
+            };
+
+            window.downloadPDF = function () {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.text("Agent Details", 10, 10);
+
+                let y = 20;
+                agents.forEach((agent, index) => {
+                    doc.text(`${index + 1}. Name: ${agent.name}, Email: ${agent.email}, Mobile: ${agent.mobile}`, 10, y);
+                    y += 10;
+                });
+
+                doc.save("agent_details.pdf");
+            };
+
+            window.downloadCSV = function () {
+                let csvContent = "data:text/csv;charset=utf-8,Name,Email,Mobile,Password\n";
+                agents.forEach(agent => {
+                    csvContent += `${agent.name},${agent.email},${agent.mobile},${agent.password}\n`;
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "agent_details.csv");
+                document.body.appendChild(link);
+                link.click();
+            };
+        });
+    </script>
+</body>
+</html>

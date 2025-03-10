@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Welcome</h1>
+        </div>
+        
+        <form method="POST" action="/signin">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>       
+            <% if (state) { %>
+
+                <p style="color: rgb(255, 157, 0);">  Incorrect details </p>
+                <br>
+             
+              <% } else { %>
+                  <p></p>
+                 <% } %>    
+            <div class="button-group">
+                <input type="submit" name="action" value="Sign in" class="login-button">
+
+            </div>
+        </form>
+
+    </div>
+   
+    <footer>
+        <a href="https://github.com/rohanongithub" target="_blank">
+            <img src="/css/github-svg.svg" alt="GitHub" height="70" width="70" class="github-icon">
+        </a>
+    </footer>
+
+</body>
+</html>
