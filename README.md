@@ -13,6 +13,9 @@ password : admin
 - **Responsive Design**: The application is styled using CSS, ensuring a responsive layout for various devices.
 - **Error Handling**: Displays error messages for incorrect login attempts.
 - **Local Storage**: Utilizes local storage to manage agent data in the agent management section.
+![Login](https://github.com/user-attachments/assets/afa0fae2-9e9f-4486-88f8-e1a33d2004f0)
+
+![Agent Management](https://github.com/user-attachments/assets/f3a5f706-e7b9-480e-9961-865c5683785d)
 
 ## Technologies Used
 
